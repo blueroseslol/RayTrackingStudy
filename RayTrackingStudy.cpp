@@ -1,4 +1,4 @@
-// RayTrackingStudy.cpp : �������̨Ӧ�ó������ڵ㡣
+﻿// RayTrackingStudy.cpp : 定义控制台应用程序的入口点。
 //
 
 #include "stdafx.h"
@@ -11,6 +11,8 @@ bool hit_sphere(const vec3& center,float radius,const ray& r) {
 	float a = dot(r.direction(), r.direction());
 	float b = 2.0*dot(oc, r.direction());
 	float c = dot(oc, oc) - radius*radius;
+	//t*t*dot(B​,B​) + 2*t*dot(B,A​-C​) + dot(A-C,A​-C​) - R*R = 0
+	//t可以看作为x，也就是ax^2+bx+c=0，一个二次函数，所以为了判断光线是否与球相交只需要判断b^2-4ac是否大于0即可
 	float discriminant = b*b - 4 * a*c;
 	return (discriminant > 0);
 }
@@ -18,7 +20,6 @@ bool hit_sphere(const vec3& center,float radius,const ray& r) {
 vec3 color(const ray& r) {
 	if (hit_sphere(vec3(0, 0, -1), 0.5, r))
 		return vec3(1, 0, 0);
-	
 	vec3 unit_direction = unit_vector(r.direction());
 	float t = 0.5*(unit_direction.y() + 1.0);
 	return (1.0 - t)*vec3(1.0, 1.0, 1.0) + t*vec3(0.5, 0.7, 1.0);
