@@ -8,6 +8,7 @@
 #include "float.h"
 #include "sphere.h"
 #include "camera.h"
+#include <random>
 
 vec3 color(const ray& r,hitable *world) {
 	hit_record rec;
@@ -31,25 +32,34 @@ int main()
 	int ns = 100;
 	out << "P3\n" << nx << " " << ny << "\n255\n";
 
-	vec3 lower_left_corner(-2.0, -1.0, -1.0);
-	vec3 horizontal(4.0, 0.0, 0.0);
-	vec3 vertical(0.0, 2.0, 0.0);
-	vec3 origin(0.0, 0.0, 0.0);
+	//vec3 lower_left_corner(-2.0, -1.0, -1.0);
+	//vec3 horizontal(4.0, 0.0, 0.0);
+	//vec3 vertical(0.0, 2.0, 0.0);
+	//vec3 origin(0.0, 0.0, 0.0);
 
 	hitable *list[2];
 	list[0] = new sphere(vec3(0, 0, -1), 0.5);
 	list[1] = new sphere(vec3(0, -100.5, -1), 100);
 	hitable *world = new hitable_list(list, 2);
+	camera cam;
+	//随机数引擎
+	//default_random_engine reng(time(nullptr));
+	//uniform_real_distribution<float> uni_dist(0.0f, 1.0f);
 
 	for (int j = ny - 1; j >= 0; j--)
 	{
 		for (int i=0;i<nx;i++)
 		{
-			double u = double(i) / double(nx);
-			double v = double(j) / double(ny);
-			ray r(origin,lower_left_corner+u*horizontal+v*vertical);
-			vec3 p = r.point_at_parameter(2.0);
-			vec3 col = color(r, world);
+			vec3 col(0.0, 0.0, 0.0);
+			for (int s = 0; s < ns; s++)
+			{
+				double u = double(i) / double(nx);
+				double v = double(j) / double(ny);
+				ray r = cam.get_ray(u, v);
+				//vec3 p = r.point_at_parameter(2.0);
+				col += color(r, world);
+			}
+			col /= double(ns);
 
 			int ir = int(255.99*col[0]);
 			int ig = int(255.99*col[1]);
