@@ -7,6 +7,7 @@
 #include "hitable_list.h"
 #include "float.h"
 #include "sphere.h"
+#include "camera.h"
 
 vec3 color(const ray& r,hitable *world) {
 	hit_record rec;
@@ -27,6 +28,7 @@ int main()
 
 	int nx = 200;
 	int ny = 100;
+	int ns = 100;
 	out << "P3\n" << nx << " " << ny << "\n255\n";
 
 	vec3 lower_left_corner(-2.0, -1.0, -1.0);

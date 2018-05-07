@@ -17,6 +17,7 @@ bool hitable_list::hit(const ray& r, double t_min, double t_max, hit_record& rec
 	for(int i=0;i<list_size;i++){
 		if (list[i]->hit(r, t_min, closest_so_far, temp_rec)) {
 			hit_anything = true;
+			//将算出t作为max值，这样可以用来计算遮挡问题
 			closest_so_far = temp_rec.t;
 			rec = temp_rec;
 		}
