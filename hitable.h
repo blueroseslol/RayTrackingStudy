@@ -1,9 +1,13 @@
 #pragma once
 #include "ray.h"
+//记录ray的各种参数的结构体
 struct hit_record
 {
+	//ray中的参数t
 	double t;
+	//入射点位置
 	vec3 p;
+	//入射点法向量
 	vec3 normal;
 };
 
