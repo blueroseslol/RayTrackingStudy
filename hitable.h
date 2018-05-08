@@ -1,6 +1,7 @@
 #pragma once
 #include "ray.h"
 //记录ray的各种参数的结构体
+class material;
 struct hit_record
 {
 	//ray中的参数t
@@ -9,6 +10,7 @@ struct hit_record
 	vec3 p;
 	//入射点法向量
 	vec3 normal;
+	material *mat_ptr;
 };
 
 class hitable
