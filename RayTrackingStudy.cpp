@@ -15,8 +15,11 @@
 vec3 color(const ray& r,hitable *world,int depth) {
 	hit_record rec;
 	if (world->hit(r, 0.001, DBL_MAX, rec)) {
+		//散射出的光线
 		ray scattered;
+		//材质的衰减数值
 		vec3 attenuation;
+		//进行50次采样，直到能量衰减到0或是光线射到背景中
 		if (depth < 50 && rec.mat_ptr->scatter(r, rec, attenuation, scattered)) {
 			return attenuation*color(scattered, world, depth + 1);
 		}
@@ -43,8 +46,8 @@ int main()
 	hitable *list[4];
 	list[0] = new sphere(vec3(0, 0, -1), 0.5,new lambertian(vec3(0.8,0.3,0.3)));
 	list[1] = new sphere(vec3(0, -100.5, -1), 100, new lambertian(vec3(0.8, 0.8, 0.0)));
-	list[2] = new sphere(vec3(1.0, 0.0, -1.0), 0.5, new metal(vec3(0.8, 0.6, 0.2)));
-	list[3] = new sphere(vec3(-1, 0.0, -1), 0.5, new metal(vec3(0.8, 0.8, 0.8)));
+	list[2] = new sphere(vec3(1.0, 0.0, -1.0), 0.5, new metal(vec3(0.8, 0.6, 0.2),0.3));
+	list[3] = new sphere(vec3(-1, 0.0, -1), 0.5, new metal(vec3(0.8, 0.8, 0.8),1.0));
 	hitable *world = new hitable_list(list, 4);
 	camera cam;
 	for (int j = ny - 1; j >= 0; j--)
