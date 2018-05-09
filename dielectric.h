@@ -1,11 +1,13 @@
 #pragma once
 #include "material.h"
-bool refract(const vec3& v, const vec3& n, double ni_over_net, vec3& refracted) {
+bool refract(const vec3& v, const vec3& n, double ni_over_nt, vec3& refracted) {
+	//ni_over_nt是折射率的倒数，也就是pdf中的，sin（theta'）/sin(theta)
 	vec3 uv = unit_vector(v);
 	double dt = dot(uv, n);
-	double discriminant = 1.0 - ni_over_net*ni_over_net*(1 - dt*dt);
+	//discriminant貌似为出射光线的sin值
+	double discriminant = 1.0 - ni_over_nt*ni_over_nt*(1 - dt*dt);
 	if (discriminant > 0) {
-		refracted = ni_over_net*(uv - n*dt) - n*sqrt(discriminant);
+		refracted = ni_over_nt*(uv - n*dt) - n*sqrt(discriminant);
 		return true;
 	}
 	else
