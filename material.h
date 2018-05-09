@@ -6,6 +6,10 @@
 std::default_random_engine reng(time(nullptr));
 std::uniform_real_distribution<double> uni_dist(0.0f, 1.0f);
 
+vec3 reflect(const vec3& v, const vec3& n) {
+	return v - 2 * dot(v, n)*n;
+}
+
 vec3 random_in_unit_sphere() {
 	vec3 p;
 	do {

@@ -1,8 +1,8 @@
 #pragma once
 #include "material.h"
-vec3 reflect(const vec3& v, const vec3& n){
-	return v - 2 * dot(v, n)*n;
-}
+//vec3 reflect(const vec3& v, const vec3& n){
+//	return v - 2 * dot(v, n)*n;
+//}
 
 class metal :public material
 {
@@ -21,6 +21,6 @@ public:
 		return (dot(scattered.direction(), rec.normal) > 0);
 	}
 	vec3 albedo;
-	float fuzz;
+	double fuzz;
 };
 
