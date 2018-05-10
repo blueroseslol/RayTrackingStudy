@@ -39,8 +39,8 @@ int main()
 {
 	std::ofstream out;
 	out.open("result.ppm");
-	int nx = 2000;
-	int ny = 1000;
+	int nx = 200;
+	int ny = 100;
 	int ns = 100;
 	out << "P3\n" << nx << " " << ny << "\n255\n";
 
@@ -49,7 +49,8 @@ int main()
 	list[1] = new sphere(vec3(0, -100.5, -1), 100, new lambertian(vec3(0.8, 0.8, 0.0)));
 	list[2] = new sphere(vec3(1.0, 0.0, -1.0), 0.5, new metal(vec3(0.8, 0.6, 0.2),0.3));
 	list[3] = new sphere(vec3(-1, 0.0, -1), 0.5, new dielectric(1.5));
-	hitable *world = new hitable_list(list, 4);
+	list[4] = new sphere(vec3(-1, 0.0, -1), -0.45, new dielectric(1.5));
+	hitable *world = new hitable_list(list, 5);
 	camera cam;
 	for (int j = ny - 1; j >= 0; j--)
 	{
