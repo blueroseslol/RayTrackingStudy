@@ -1,13 +1,13 @@
 ﻿// RayTrackingStudy.cpp : 定义控制台应用程序的入口点。
 //
-
+//#define _USE_MATH_DEFINES
 #include "stdafx.h"
+#include "camera.h"
 #include <iostream>
 #include <fstream>
 #include "hitable_list.h"
 #include "float.h"
 #include "sphere.h"
-#include "camera.h"
 
 #include "lambertian.h"
 #include "metal.h"
@@ -51,7 +51,9 @@ int main()
 	list[3] = new sphere(vec3(-1, 0.0, -1), 0.5, new dielectric(1.5));
 	list[4] = new sphere(vec3(-1, 0.0, -1), -0.45, new dielectric(1.5));
 	hitable *world = new hitable_list(list, 5);
-	camera cam;
+
+	double R = cos(M_PI / 4);
+	camera cam(90, nx/ny);
 	for (int j = ny - 1; j >= 0; j--)
 	{
 		for (int i=0;i<nx;i++)
