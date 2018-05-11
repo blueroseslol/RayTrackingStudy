@@ -31,13 +31,13 @@ public:
 		vec3 refracted;
 		double reflect_prob;
 		double cosine;
-		//入射光线
+		//从球体内部射出
 		if (dot(r_in.direction(), rec.normal) > 0) {
 			outward_normal = -rec.normal;
 			ni_over_nt = ref_idx;
 			cosine = ref_idx*dot(r_in.direction(), rec.normal) / r_in.direction().length();
 		}else{
-			//出射光线
+			//从球体外部输入
 			outward_normal = rec.normal;
 			ni_over_nt = 1.0 / ref_idx;
 			cosine = -dot(r_in.direction(), rec.normal) / r_in.direction().length();
