@@ -67,8 +67,8 @@ int main()
 {
 	std::ofstream out;
 	out.open("result.ppm");
-	int nx = 2000;
-	int ny = 1000;
+	int nx = 200;
+	int ny = 100;
 	int ns = 100;
 	out << "P3\n" << nx << " " << ny << "\n255\n";
 	double R = cos(M_PI / 4);
@@ -84,7 +84,7 @@ int main()
 	vec3 lookat(0, 0, 0);
 	double dist_to_focus = 10;
 	double aperture = 0.1;
-	camera cam(lookfrom , lookat, vec3(0, 1, 0), 20, nx / ny,aperture,dist_to_focus);
+	camera cam(lookfrom , lookat, vec3(0, 1, 0), 20, nx / ny,aperture,dist_to_focus,0.0,1.0);
 	for (int j = ny - 1; j >= 0; j--)
 	{
 		for (int i=0;i<nx;i++)
