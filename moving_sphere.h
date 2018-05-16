@@ -10,6 +10,8 @@ public:
 
 	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const;
 
+	virtual bool bounding_box(double t0, double t1, aabb& box) const;
+
 	vec3 center(double time) const;
 
 	vec3 center0, center1;
@@ -20,6 +22,12 @@ public:
 
 vec3 moving_sphere::center(double time) const {
 	return center0 + ((time - time0) / (time1 - time0))*(center1 - center0);
+}
+
+aabb surrounding_box(aabb box0,aabb box1){
+	vec3 small(fmin(box0.min().x(), box1.min().x()), fmin(box0.min().y(), box1.min().y()), fmin(box0.min().z(), box1.min().z()));
+	vec3 big(fmin(box0.max().x(), box1.max().x()), fmin(box0.max().y(), box1.max().y()), fmin(box0.max().z(), box1.max().z()));
+	return aabb(small, big);
 }
 
 bool moving_sphere::hit(const ray& r, double t_min, double t_max, hit_record& rec) const{
@@ -48,4 +56,9 @@ bool moving_sphere::hit(const ray& r, double t_min, double t_max, hit_record& re
 		}
 	}
 	return false;
+}
+
+bool moving_sphere::bounding_box(double t0, double t1, aabb& box) const {
+	box = surrounding_box(aabb(center(t0) - vec3(radius, radius, radius), center(t0) + vec3(radius, radius, radius)), aabb(center(t1) - vec3(radius, radius, radius), center(t1) + vec3(radius, radius, radius)));
+	return true;
 }

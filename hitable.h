@@ -1,5 +1,6 @@
 #pragma once
 #include "ray.h"
+#include "aabb.h"
 //记录ray的各种参数的结构体
 class material;
 struct hit_record
@@ -17,5 +18,6 @@ class hitable
 {
 public:
 	virtual bool hit(const ray& r,double t_min,double t_max,hit_record& rec) const=0;
+	virtual bool bounding_box(double t0, double t1, aabb& box) const = 0;
 };
 

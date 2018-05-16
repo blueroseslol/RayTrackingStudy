@@ -8,6 +8,7 @@
 #include "hitable_list.h"
 #include "float.h"
 #include "sphere.h"
+#include "moving_sphere.h"
 
 #include "lambertian.h"
 #include "metal.h"
@@ -46,7 +47,7 @@ hitable *random_scene() {
 			vec3 center(a+0.9*uni_dist(reng),0.2,b+0.9*uni_dist(reng));
 			if ((center - vec3(4, 0.2, 0)).length() > 0.9) {
 				if (choose_mat < 0.8) {
-					list[i++] = new sphere(center, 0.2, new lambertian(vec3(uni_dist(reng)*uni_dist(reng), uni_dist(reng)*uni_dist(reng), uni_dist(reng)*uni_dist(reng))));
+					list[i++] = new moving_sphere(center,center+vec3(0,0.5*uni_dist(reng),0),0.0,1.0,0.2,new lambertian(vec3(uni_dist(reng)*uni_dist(reng), uni_dist(reng)*uni_dist(reng), uni_dist(reng)*uni_dist(reng))));
 				}else if (choose_mat<0.95) {
 					list[i++]= new sphere(center, 0.2, new metal(vec3(0.5*(1+ uni_dist(reng)), 0.5*(1 + uni_dist(reng)), 0.5*(1 + uni_dist(reng))), uni_dist(reng)*0.5));
 				}
@@ -67,8 +68,8 @@ int main()
 {
 	std::ofstream out;
 	out.open("result.ppm");
-	int nx = 200;
-	int ny = 100;
+	int nx = 2000;
+	int ny = 1000;
 	int ns = 100;
 	out << "P3\n" << nx << " " << ny << "\n255\n";
 	double R = cos(M_PI / 4);
@@ -106,6 +107,7 @@ int main()
 			int ib = int(255.99*col[2]);
 			out << ir << " " << ig << " " << ib << "\n";
 		}
+		std::cout << j<<"\n";
 	}
 	out.close();
 	//system("pause");
