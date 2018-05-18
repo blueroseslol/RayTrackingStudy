@@ -11,6 +11,20 @@ inline double trilinear_interp(double c[2][2][2], double u, double v, double w) 
 	return accum;
 }
 
+inline double perlin_interp(vec3 c[2][2][2], double u, double v, double w) {
+	double uu = u*u*(3 - 2 * u);
+	double vv = v*v*(3 - 2 * v);
+	double ww = w*w*(3 - 2 * w);
+	double accum = 0;
+	for (int i = 0; i<2; i++)
+		for (int j = 0; j<2; j++)
+			for (int k = 0; k < 2; k++) {
+				vec3 weight_v(u - i, v - j, w - k);
+				accum += (i*uu + (1 - i)*(1 - uu))*(j*vv + (1 - j)*(1 - vv))*(k*ww + (1 - k)*(1 - ww))*dot(c[i][j][k], weight_v);
+			}
+	return accum;
+}
+
 class perlin
 {
 public:
@@ -22,32 +36,41 @@ public:
 		//int i = int(4 * p.x()) & 255;
 		//int j = int(4 * p.y()) & 255;
 		//int k = int(4 * p.z()) & 255;
-		u = u*u*(3 - 2 * u);
-		v = v*v*(3 - 2 * v);
-		w = w*w*(3 - 2 * w);
+		//u = u*u*(3 - 2 * u);
+		//v = v*v*(3 - 2 * v);
+		//w = w*w*(3 - 2 * w);
 		int i = floor(p.x());
 		int j = floor(p.y());
 		int k = floor(p.z());
-		double c[2][2][2];
+		vec3 c[2][2][2];
 		for (int di = 0; di < 2; di++)
 			for (int dj = 0; dj < 2; dj++)
 				for (int dk = 0; dk < 2; dk++)
-					c[di][dj][dk] = ranfloat[perm_x[(i+di)&255]^ perm_y[(j + dj) & 255]^ perm_z[(k + dk) & 255]];
-		return trilinear_interp(c, u, v, w);
+					c[di][dj][dk] = ranvec[perm_x[(i + di) & 255] ^ perm_y[(j + dj) & 255] ^ perm_z[(k + dk) & 255]];
+
+		return perlin_interp(c, u, v, w);
 	/*	return ranfloat[perm_x[i] ^ perm_y[j] ^ perm_z[k]];*/
 	}
-	static double *ranfloat;
+	//static double *ranfloat;
+	static vec3 *ranvec;
 	static int *perm_x;
 	static int *perm_y;
 	static int *perm_z;
 };
 
-static double* perlin_generate() {
-	double *p = new double[256];
-	for (int i = 0; i < 256; ++i) 
-		p[i] = uni_dist(reng);
+static vec3* perlin_generate() {
+	vec3 *p = new vec3[256];
+	for (int i = 0; i < 256; i++)
+		p[i] = unit_vector(vec3(-1 + 2 * uni_dist(reng), -1 + 2 * uni_dist(reng), -1 + 2 * uni_dist(reng)));
 	return p;
 }
+
+//static double* perlin_generate() {
+//	double *p = new double[256];
+//	for (int i = 0; i < 256; ++i) 
+//		p[i] = uni_dist(reng);
+//	return p;
+//}
 
 void permute(int *p, int n) {
 	for (int i=n-1;i>0;i--){
@@ -67,7 +90,8 @@ static int* perlin_generate_perm() {
 	return p;
 }
 
-double *perlin::ranfloat = perlin_generate();
+vec3 *perlin::ranvec = perlin_generate();
+//double *perlin::ranfloat = perlin_generate();
 int *perlin::perm_x = perlin_generate_perm();
 int *perlin::perm_y = perlin_generate_perm();
 int *perlin::perm_z = perlin_generate_perm();
