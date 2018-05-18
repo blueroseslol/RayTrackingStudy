@@ -22,6 +22,9 @@
     <Filter Include="头文件\utility">
       <UniqueIdentifier>{30e0f2c6-d844-4074-b388-4525630c0261}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\texture">
+      <UniqueIdentifier>{d8c39ed7-847f-4a78-b592-646288ab08c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -69,17 +72,23 @@
     <ClInclude Include="bvh_node.h">
       <Filter>头文件\shape</Filter>
     </ClInclude>
-    <ClInclude Include="constant_texture.h">
-      <Filter>头文件\utility</Filter>
-    </ClInclude>
     <ClInclude Include="aabb.h">
       <Filter>头文件\utility</Filter>
     </ClInclude>
-    <ClInclude Include="checker_texture.h">
+    <ClInclude Include="perlin.h">
       <Filter>头文件\utility</Filter>
     </ClInclude>
     <ClInclude Include="texture.h">
-      <Filter>头文件\utility</Filter>
+      <Filter>头文件\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="constant_texture.h">
+      <Filter>头文件\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="checker_texture.h">
+      <Filter>头文件\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="noise_texture.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
