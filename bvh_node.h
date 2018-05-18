@@ -7,8 +7,7 @@
 std::default_random_engine reng(time(nullptr));
 std::uniform_real_distribution<double> uni_dist(0.0f, 1.0f);
 
-class bvh_node :
-	public hitable
+class bvh_node : public hitable
 {
 public:
 
@@ -58,9 +57,9 @@ bvh_node::bvh_node(hitable **l, int n, double time0, double time1) {
 	if (axis == 0)
 		qsort(l, n, sizeof(hitable *), box_x_compare);
 	else if(axis==1)
-		qsort(l, n, sizeof(hitable *), box_x_compare);
+		qsort(l, n, sizeof(hitable *), box_y_compare);
 	else
-		qsort(l, n, sizeof(hitable *), box_x_compare);
+		qsort(l, n, sizeof(hitable *), box_z_compare);
 	if (n==1){
 		left = right = l[0];
 	}else if (n == 2){
@@ -83,6 +82,30 @@ int box_x_compare(const void *a, const void *b){
 	if (!ah->bounding_box(0, 0, box_left) || !bh->bounding_box(0, 0, box_right))
 		std::cerr << "no bounding box in bvh_node constructor \n";
 	if (box_left.min().x() - box_right.min().x() < 0)
+		return -1;
+	else
+		return 1;
+}
+
+int box_y_compare(const void *a, const void *b) {
+	aabb box_left, box_right;
+	hitable *ah = *(hitable**)a;
+	hitable *bh = *(hitable**)b;
+	if (!ah->bounding_box(0, 0, box_left) || !bh->bounding_box(0, 0, box_right))
+		std::cerr << "no bounding box in bvh_node constructor \n";
+	if (box_left.min().y() - box_right.min().y() < 0)
+		return -1;
+	else
+		return 1;
+}
+
+int box_z_compare(const void *a, const void *b) {
+	aabb box_left, box_right;
+	hitable *ah = *(hitable**)a;
+	hitable *bh = *(hitable**)b;
+	if (!ah->bounding_box(0, 0, box_left) || !bh->bounding_box(0, 0, box_right))
+		std::cerr << "no bounding box in bvh_node constructor \n";
+	if (box_left.min().z() - box_right.min().z() < 0)
 		return -1;
 	else
 		return 1;

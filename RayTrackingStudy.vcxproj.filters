@@ -66,11 +66,20 @@
     <ClInclude Include="vec3.h">
       <Filter>头文件\utility</Filter>
     </ClInclude>
-    <ClInclude Include="aabb.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="bvh_node.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="constant_texture.h">
+      <Filter>头文件\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="aabb.h">
+      <Filter>头文件\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="checker_texture.h">
+      <Filter>头文件\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="texture.h">
+      <Filter>头文件\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
