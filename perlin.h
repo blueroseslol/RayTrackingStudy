@@ -22,6 +22,9 @@ public:
 		//int i = int(4 * p.x()) & 255;
 		//int j = int(4 * p.y()) & 255;
 		//int k = int(4 * p.z()) & 255;
+		u = u*u*(3 - 2 * u);
+		v = v*v*(3 - 2 * v);
+		w = w*w*(3 - 2 * w);
 		int i = floor(p.x());
 		int j = floor(p.y());
 		int k = floor(p.z());
