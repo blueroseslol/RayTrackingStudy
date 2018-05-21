@@ -60,7 +60,7 @@ public:
 
 static vec3* perlin_generate() {
 	vec3 *p = new vec3[256];
-	for (int i = 0; i < 256; i++)
+	for (int i = 0; i < 256; ++i)
 		p[i] = unit_vector(vec3(-1 + 2 * uni_dist(reng), -1 + 2 * uni_dist(reng), -1 + 2 * uni_dist(reng)));
 	return p;
 }
