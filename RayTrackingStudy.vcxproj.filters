@@ -96,6 +96,12 @@
     <ClInclude Include="stb_image.h">
       <Filter>头文件\utility</Filter>
     </ClInclude>
+    <ClInclude Include="diffuse_light.h">
+      <Filter>头文件\material</Filter>
+    </ClInclude>
+    <ClInclude Include="xy_rect.h">
+      <Filter>头文件\shape</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

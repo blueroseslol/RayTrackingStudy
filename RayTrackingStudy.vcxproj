@@ -167,6 +167,8 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="vec3.h" />
+    <ClInclude Include="diffuse_light.h" />
+    <ClInclude Include="xy_rect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RayTrackingStudy.cpp" />
