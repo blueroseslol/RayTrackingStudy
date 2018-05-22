@@ -16,6 +16,17 @@
 #include "constant_texture.h"
 #include "checker_texture.h"
 #include "noise_texture.h"
+#include "image_texture.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
+hitable *earth() {
+	int nx, ny, nn;
+	//unsigned char *tex_data = stbi_load("tiled.jpg", &nx, &ny, &nn, 0);
+	unsigned char *tex_data = stbi_load("earth.jpg", &nx, &ny, &nn, 0);
+	material *mat = new lambertian(new image_texture(tex_data, nx, ny));
+	return new sphere(vec3(0, 0, 0), 2, mat);
+}
 
 hitable *two_perlin_spheres() {
 	texture *pertext = new noise_texture();
@@ -92,7 +103,7 @@ int main()
 	//list[3] = new sphere(vec3(-1, 0.0, -1), 0.5, new dielectric(1.5));
 	//list[4] = new sphere(vec3(-1, 0.0, -1), -0.45, new dielectric(1.5));
 	//hitable *world = random_scene();
-	hitable *world = two_perlin_spheres();
+	hitable *world = earth();
 	vec3 lookfrom(13, 2, 3);
 	vec3 lookat(0, 0, 0);
 	double dist_to_focus = 10;

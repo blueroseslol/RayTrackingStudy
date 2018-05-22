@@ -3,6 +3,14 @@
 #include "aabb.h"
 //记录ray的各种参数的结构体
 class material;
+
+void get_sphere_uv(const vec3& p, double& u, double &v) {
+	double phi = atan2(p.z(), p.x());
+	double theta = asin(p.y());
+	u = 1 - (phi + M_PI) / (2 * M_PI);
+	v = (theta + M_PI / 2) / M_PI;
+}
+
 struct hit_record
 {
 	//ray中的参数t
@@ -12,6 +20,8 @@ struct hit_record
 	//入射点法向量
 	vec3 normal;
 	material *mat_ptr;
+	double u;
+	double v;
 };
 
 class hitable
