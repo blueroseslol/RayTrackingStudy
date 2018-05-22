@@ -22,6 +22,7 @@
 #include "diffuse_light.h"
 #include "rect.h"
 #include "flip_normals.h"
+#include "box.h"
 
 hitable *cornell_box() {
 	hitable **list = new hitable*[6];
@@ -37,6 +38,8 @@ hitable *cornell_box() {
 	list[i++] = new flip_normals(new xz_rect(0, 555, 0, 555, 555, white));
 	list[i++] = new xz_rect(0, 555, 0, 555, 0, white);
 	list[i++] = new flip_normals(new xy_rect(0, 555, 0, 555, 555, white));
+	list[i++] = new box(vec3(130, 0, 65), vec3(295, 165, 230), white);
+	list[i++] = new box(vec3(265, 0, 295), vec3(430, 330, 460), white);
 	return new hitable_list(list, i);
 }
 
@@ -120,7 +123,7 @@ int main()
 {
 	std::ofstream out;
 	out.open("result.ppm");
-	int nx = 2000;
+	int nx = 1000;
 	int ny = 1000;
 	int ns = 100;
 	out << "P3\n" << nx << " " << ny << "\n255\n";
