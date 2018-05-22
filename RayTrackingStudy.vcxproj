@@ -146,11 +146,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aabb.h" />
+    <ClInclude Include="box.h" />
     <ClInclude Include="bvh_node.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="checker_texture.h" />
     <ClInclude Include="constant_texture.h" />
     <ClInclude Include="dielectric.h" />
+    <ClInclude Include="flip_normals.h" />
     <ClInclude Include="hitable.h" />
     <ClInclude Include="hitable_list.h" />
     <ClInclude Include="image_texture.h" />
@@ -168,7 +170,7 @@
     <ClInclude Include="texture.h" />
     <ClInclude Include="vec3.h" />
     <ClInclude Include="diffuse_light.h" />
-    <ClInclude Include="xy_rect.h" />
+    <ClInclude Include="rect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RayTrackingStudy.cpp" />

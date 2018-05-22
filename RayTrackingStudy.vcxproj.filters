@@ -99,7 +99,13 @@
     <ClInclude Include="diffuse_light.h">
       <Filter>头文件\material</Filter>
     </ClInclude>
-    <ClInclude Include="xy_rect.h">
+    <ClInclude Include="rect.h">
+      <Filter>头文件\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="flip_normals.h">
+      <Filter>头文件\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="box.h">
       <Filter>头文件\shape</Filter>
     </ClInclude>
   </ItemGroup>
