@@ -23,6 +23,8 @@
 #include "rect.h"
 #include "flip_normals.h"
 #include "box.h"
+#include "translate.h"
+#include "rotate_y.h"
 
 hitable *cornell_box() {
 	hitable **list = new hitable*[6];
@@ -38,8 +40,8 @@ hitable *cornell_box() {
 	list[i++] = new flip_normals(new xz_rect(0, 555, 0, 555, 555, white));
 	list[i++] = new xz_rect(0, 555, 0, 555, 0, white);
 	list[i++] = new flip_normals(new xy_rect(0, 555, 0, 555, 555, white));
-	list[i++] = new box(vec3(130, 0, 65), vec3(295, 165, 230), white);
-	list[i++] = new box(vec3(265, 0, 295), vec3(430, 330, 460), white);
+	list[i++] = new translate(new rotate_y(new box(vec3(130, 0, 65), vec3(295, 165, 230), white),-18),vec3(130,0,65));
+	list[i++] = new translate(new rotate_y(new box(vec3(265, 0, 295), vec3(430, 330, 460), white),15),vec3(265,0,295));
 	return new hitable_list(list, i);
 }
 

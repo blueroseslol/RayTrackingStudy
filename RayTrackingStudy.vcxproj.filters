@@ -108,6 +108,12 @@
     <ClInclude Include="box.h">
       <Filter>头文件\shape</Filter>
     </ClInclude>
+    <ClInclude Include="translate.h">
+      <Filter>头文件\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="rotate_y.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
