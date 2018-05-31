@@ -112,7 +112,7 @@
       <Filter>头文件\shape</Filter>
     </ClInclude>
     <ClInclude Include="rotate_y.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\shape</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
