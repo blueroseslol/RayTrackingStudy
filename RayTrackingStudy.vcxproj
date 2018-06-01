@@ -150,6 +150,7 @@
     <ClInclude Include="bvh_node.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="checker_texture.h" />
+    <ClInclude Include="constant_medium.h" />
     <ClInclude Include="constant_texture.h" />
     <ClInclude Include="dielectric.h" />
     <ClInclude Include="flip_normals.h" />
@@ -173,6 +174,7 @@
     <ClInclude Include="vec3.h" />
     <ClInclude Include="diffuse_light.h" />
     <ClInclude Include="rect.h" />
+    <ClInclude Include="isotropic.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RayTrackingStudy.cpp" />
