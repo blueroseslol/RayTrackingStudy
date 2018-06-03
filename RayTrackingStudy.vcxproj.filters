@@ -114,11 +114,11 @@
     <ClInclude Include="rotate_y.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="constant_medium.h">
-      <Filter>头文件\material</Filter>
-    </ClInclude>
     <ClInclude Include="isotropic.h">
       <Filter>头文件\material</Filter>
+    </ClInclude>
+    <ClInclude Include="constant_medium.h">
+      <Filter>头文件\shape</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

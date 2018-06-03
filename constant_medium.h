@@ -25,6 +25,7 @@ bool constant_medium::hit(const ray& r, double t_min, double t_max, hit_record& 
 	bool db = (uni_dist(reng) < 0.00001);
 	db = false;
 	hit_record rec1, rec2;
+	//使用两个hit_record来计算采样位置到边界的距离，rec1入射点，rec2为出射点
 	if (boundary->hit(r, -FLT_MAX, FLT_MAX, rec1)) {
 		if (boundary->hit(r,rec1.t+0.0001,FLT_MAX,rec2))
 		{
@@ -34,8 +35,10 @@ bool constant_medium::hit(const ray& r, double t_min, double t_max, hit_record& 
 				rec1.t = t_min;
 			if (rec2.t > t_max)
 				rec2.t = t_max;
+			//如果物体不在视角正方向则忽略
 			if (rec1.t >= rec2.t)
 				return false;
+			//如果在物体内部，就把摄像机平面当作入射面
 			if (rec1.t < 0)
 				rec1.t = 0;
 			double distance_inside_boundary = (rec2.t - rec1.t)*r.direction().length();

@@ -93,7 +93,7 @@ hitable *two_perlin_spheres() {
 
 vec3 color(const ray& r,hitable *world,int depth) {
 	hit_record rec;
-	if (world->hit(r, 0.001, DBL_MAX, rec)) {
+	if (world->hit(r, 0.000000001, DBL_MAX, rec)) {
 		//散射出的光线
 		ray scattered;
 		//材质的衰减数值
