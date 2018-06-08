@@ -26,6 +26,8 @@
 #include "translate.h"
 #include "rotate_y.h"
 #include "constant_medium.h"
+#include <ppl.h>
+#include <ppltasks.h>
 hitable *cornell_smoke() {
 	hitable **list = new hitable*[8];
 	int i = 0;
@@ -33,16 +35,19 @@ hitable *cornell_smoke() {
 	material *white = new lambertian(new constant_texture(vec3(0.73, 0.73, 0.73)));
 	material *green = new lambertian(new constant_texture(vec3(0.12, 0.45, 0.15)));
 	material *light = new diffuse_light(new constant_texture(vec3(7, 7, 7)));
+
 	list[i++] = new flip_normals(new yz_rect(0, 555, 0, 555, 555, green));
 	list[i++] = new yz_rect(0, 555, 0, 555, 0, red);
+	//list[i++] = new xz_rect(213, 343, 227, 332, 554, light);
 	list[i++] = new xz_rect(113, 443, 127, 432, 554, light);
 	list[i++] = new flip_normals(new xz_rect(0, 555, 0, 555, 555, white));
 	list[i++] = new xz_rect(0, 555, 0, 555, 0, white);
 	list[i++] = new flip_normals(new xy_rect(0, 555, 0, 555, 555, white));
+
 	hitable *b1 = new translate(new rotate_y(new box(vec3(0, 0, 0), vec3(165, 165, 165), white), -18), vec3(130, 0, 65));
 	hitable *b2 = new translate(new rotate_y(new box(vec3(0, 0, 0), vec3(165, 330, 165), white), 15), vec3(265, 0, 295));
 	list[i++] = new constant_medium(b1, 0.01, new constant_texture(vec3(1.0, 1.0, 1.0)));
-	list[i++] = new constant_medium(b2, 0.01, new constant_texture(vec3(0.0, 0.0, 0.0)));
+	list[i++] = new constant_medium(b2, 0.01, new constant_texture(vec3(0, 0, 0)));
 	return new hitable_list(list, i);
 }
 
@@ -143,50 +148,54 @@ hitable *random_scene() {
 
 int main()
 {
-	std::ofstream out;
-	out.open("result.ppm");
-	int nx = 1000;
-	int ny = 1000;
-	int ns = 100;
-	out << "P3\n" << nx << " " << ny << "\n255\n";
-	double R = cos(M_PI / 4);
-	//hitable *list[4];
-	//list[0] = new sphere(vec3(0, 0, -1), 0.5, new lambertian(vec3(0.1, 0.2, 0.5)));
-	//list[1] = new sphere(vec3(0, -100.5, -1), 100, new lambertian(vec3(0.8, 0.8, 0.0)));
-	//list[2] = new sphere(vec3(1.0, 0.0, -1.0), 0.5, new metal(vec3(0.8, 0.6, 0.2), 0.3));
-	//list[3] = new sphere(vec3(-1, 0.0, -1), 0.5, new dielectric(1.5));
-	//list[4] = new sphere(vec3(-1, 0.0, -1), -0.45, new dielectric(1.5));
-	//hitable *world = random_scene();
-	hitable *world = cornell_smoke();
-	vec3 lookfrom(278, 278, -800);
-	vec3 lookat(278, 278, 0);
-	double dist_to_focus = 10;
-	double aperture = 0.0;
-	camera cam(lookfrom , lookat, vec3(0, 1, 0), 40, nx / ny,aperture,dist_to_focus,0.0,1.0);
-	for (int j = ny - 1; j >= 0; j--)
-	{
-		for (int i=0;i<nx;i++)
+	auto render = [] {
+		std::ofstream out;
+		out.open("result.ppm");
+		int nx = 1000;
+		int ny = 1000;
+		int ns = 100;
+		out << "P3\n" << nx << " " << ny << "\n255\n";
+		double R = cos(M_PI / 4);
+		hitable *world = cornell_smoke();
+		vec3 lookfrom(278, 278, -800);
+		vec3 lookat(278, 278, 0);
+		double dist_to_focus = 10;
+		double aperture = 0.0;
+		camera cam(lookfrom, lookat, vec3(0, 1, 0), 40, nx / ny, aperture, dist_to_focus, 0.0, 1.0);
+		for (int j = ny - 1; j >= 0; j--)
 		{
-			vec3 col(0.0, 0.0, 0.0);
-			//使用了SSAA
-			for (int s = 0; s < ns; s++)
+			for (int i = 0; i<nx; i++)
 			{
-				double u = double(i+ uni_dist(reng)) / double(nx);
-				double v = double(j+ uni_dist(reng)) / double(ny);
-				ray r = cam.get_ray(u, v);
-				col += color(r, world,0);
+				vec3 col(0.0, 0.0, 0.0);
+				//使用了SSAA
+				for (int s = 0; s < ns; s++)
+				{
+					double u = double(i + uni_dist(reng)) / double(nx);
+					double v = double(j + uni_dist(reng)) / double(ny);
+					ray r = cam.get_ray(u, v);
+					col += color(r, world, 0);
+				}
+				col /= double(ns);
+				
+				if (col[0]>1||col[1]>1||col[2]>1)
+				{
+					col[0] = 1;
+					col[1] = 1;
+					col[2] = 1;
+				}
+				//伽马矫正是较为复杂的曲线，这里使用比较接近的平方根进行计算
+				col = vec3(sqrt(col[0]), sqrt(col[1]), sqrt(col[2]));
+				int ir = int(255.99*col[0]);
+				int ig = int(255.99*col[1]);
+				int ib = int(255.99*col[2]);
+				out << ir << " " << ig << " " << ib << "\n";
 			}
-			col /= double(ns);
-			//伽马矫正是较为复杂的曲线，这里使用比较接近的平方根进行计算
-			col = vec3(sqrt(col[0]), sqrt(col[1]), sqrt(col[2]));
-			int ir = int(255.99*col[0]);
-			int ig = int(255.99*col[1]);
-			int ib = int(255.99*col[2]);
-			out << ir << " " << ig << " " << ib << "\n";
+			std::cout << j << "\n";
 		}
-		std::cout << j<<"\n";
-	}
-	out.close();
+		out.close();
+	};
+	 auto renderTask = Concurrency::task<void>(render);
+	 renderTask.wait();
 	//system("pause");
     return 0;
 }

@@ -21,8 +21,8 @@ rotate_y::rotate_y(hitable *p, double angle) : ptr(p) {
 	cos_theta = cos(radians);
 	//判断赋值的hitable对象有没有包围盒，并且赋予给这个节点
 	hasbox = ptr->bounding_box(0, 1, bbox);
-	vec3 min(FLT_MAX, FLT_MAX, FLT_MAX);
-	vec3 max(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+	vec3 min(DBL_MAX, DBL_MAX, DBL_MAX);
+	vec3 max(-DBL_MAX, -DBL_MAX, -DBL_MAX);
 	for (int i = 0; i < 2;i++)
 	{
 		for (int j=0; j < 2;j++)
