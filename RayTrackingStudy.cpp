@@ -57,7 +57,7 @@ hitable *cornell_box() {
 	material *red = new lambertian(new constant_texture(vec3(0.65, 0.05, 0.05)));
 	material *white = new lambertian(new constant_texture(vec3(0.73, 0.73, 0.73)));
 	material *green = new lambertian(new constant_texture(vec3(0.12, 0.45, 0.15)));
-	material *light = new diffuse_light(new constant_texture(vec3(16, 16, 16)));
+	material *light = new diffuse_light(new constant_texture(vec3(15, 15, 15)));
 
 	list[i++] = new flip_normals(new yz_rect(0, 555, 0, 555, 555, green));
 	list[i++] = new yz_rect(0, 555, 0, 555, 0, red);
@@ -104,9 +104,11 @@ vec3 color(const ray& r,hitable *world,int depth) {
 		//材质的衰减数值
 		vec3 attenuation;
 		vec3 emitted = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
+		double pdf;
+		vec3 albedo;
 		//进行50次采样，直到能量衰减到0或是光线射到背景中
-		if (depth < 50 && rec.mat_ptr->scatter(r, rec, attenuation, scattered)) {
-			return emitted+attenuation*color(scattered, world, depth + 1);
+		if (depth < 50 && rec.mat_ptr->scatter(r, rec, albedo, scattered,pdf)) {
+			return emitted + albedo*rec.mat_ptr->scattering_pdf(r, rec, scattered)*color(scattered, world, depth + 1);
 		}
 		else{
 			return emitted;
@@ -156,7 +158,7 @@ int main()
 		int ns = 100;
 		out << "P3\n" << nx << " " << ny << "\n255\n";
 		double R = cos(M_PI / 4);
-		hitable *world = cornell_smoke();
+		hitable *world = cornell_box();
 		vec3 lookfrom(278, 278, -800);
 		vec3 lookat(278, 278, 0);
 		double dist_to_focus = 10;
@@ -176,13 +178,19 @@ int main()
 					col += color(r, world, 0);
 				}
 				col /= double(ns);
-				
-				if (col[0]>1||col[1]>1||col[2]>1)
-				{
-					col[0] = 1;
-					col[1] = 1;
-					col[2] = 1;
-				}
+				//if (col[0]>1 && col[1]>1 && col[2]>1)
+				//{
+				//	col[0] = 1;
+				//	col[1] = 1;
+				//	col[2] = 1;
+				//}else if (col[0]>1||col[1]>1||col[2]>1)
+				//{
+				//	double length=col.length();
+				//	col[0] /= length;
+				//	col[1] /= length;
+				//	col[2] /= length;
+				//}
+			
 				//伽马矫正是较为复杂的曲线，这里使用比较接近的平方根进行计算
 				col = vec3(sqrt(col[0]), sqrt(col[1]), sqrt(col[2]));
 				int ir = int(255.99*col[0]);

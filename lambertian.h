@@ -6,14 +6,20 @@ class lambertian :public material
 public:
 	//lambertian(const vec3& a):albedo(a)	{}
 	lambertian(texture *a): albedo(a){}
-	virtual bool scatter(const ray& r_in, const hit_record& rec, vec3& attenuation, ray& scattered) const{
+	bool scatter(const ray& r_in, const hit_record& rec, vec3& alb, ray& scattered,double& pdf) const{
 		vec3 target = rec.p + rec.normal + random_in_unit_sphere();
-		scattered = ray(rec.p, target - rec.p,r_in.time());
-		//attenuation = albedo->value(0, 0, rec.p);
-		attenuation = albedo->value(rec.u, rec.v, rec.p);
+		scattered = ray(rec.p, unit_vector(target-rec.p),r_in.time());
+		alb = albedo->value(rec.u, rec.v, rec.p);
+		pdf = dot(rec.normal, scattered.direction()) / M_PI;
 		return true;
 	}
-	//vec3 albedo;
+
+	double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const {
+		double cosine = dot(rec.normal, unit_vector(scattered.direction()));
+		if (cosine < 0)cosine = 0;
+		return cosine / M_PI;
+	}
+	
 	texture *albedo;
 };
 
