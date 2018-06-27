@@ -13,10 +13,18 @@ public:
 	}
 
 	bool scatter(const ray& r_in, const hit_record& rec, vec3& alb, ray& scattered,double& pdf) const{
-		vec3 target = rec.p + rec.normal + random_in_unit_sphere();
-		scattered = ray(rec.p, unit_vector(target-rec.p),r_in.time());
+		//vec3 target = rec.p + rec.normal + random_in_unit_sphere();
+		//scattered = ray(rec.p, unit_vector(target-rec.p),r_in.time());
+		//alb = albedo->value(rec.u, rec.v, rec.p);
+		//pdf = dot(rec.normal, scattered.direction()) / M_PI;
+		vec3 direction;
+		do 
+		{
+			direction = random_in_unit_sphere();
+		} while (dot(direction,rec.normal)<0);
+		scattered = ray(rec.p, unit_vector(direction), r_in.time());
 		alb = albedo->value(rec.u, rec.v, rec.p);
-		pdf = dot(rec.normal, scattered.direction()) / M_PI;
+		pdf = 0.5/ M_PI;
 		return true;
 	}
 	texture *albedo;
