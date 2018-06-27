@@ -98,7 +98,7 @@ hitable *two_perlin_spheres() {
 
 vec3 color(const ray& r,hitable *world,int depth) {
 	hit_record rec;
-	if (world->hit(r, 0.000000001, DBL_MAX, rec)) {
+	if (world->hit(r, 0.001, DBL_MAX, rec)) {
 		//散射出的光线
 		ray scattered;
 		//材质的衰减数值
@@ -108,7 +108,7 @@ vec3 color(const ray& r,hitable *world,int depth) {
 		vec3 albedo;
 		//进行50次采样，直到能量衰减到0或是光线射到背景中
 		if (depth < 50 && rec.mat_ptr->scatter(r, rec, albedo, scattered,pdf)) {
-			return emitted + albedo*rec.mat_ptr->scattering_pdf(r, rec, scattered)*color(scattered, world, depth + 1);
+			return emitted + albedo*rec.mat_ptr->scattering_pdf(r, rec, scattered)*color(scattered, world, depth + 1)/pdf;
 		}
 		else{
 			return emitted;
