@@ -20,6 +20,16 @@ vec3 random_in_unit_sphere() {
 	return p;
 }
 
+inline vec3 random_cosine_direction() {
+	double r1 = uni_dist(reng);
+	double r2 = uni_dist(reng);
+	double z = sqrt(1 - r2);
+	double phi = 2 * M_PI*r1;
+	double x = cos(phi) * 2 * sqrt(r2);
+	double y = sin(phi) * 2 * sqrt(r2);
+	return vec3(x, y, z);
+}
+
 class material
 {
 public:
