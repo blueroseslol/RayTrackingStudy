@@ -37,7 +37,7 @@ public:
 
 	virtual double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const {return false;}
 
-	virtual vec3 emitted(double u, double v, const vec3& p) const {
+	virtual vec3 emitted(const ray& r_in,const hit_record& rec,double u, double v, const vec3& p) const {
 		return vec3(0, 0, 0);
 	}
 };

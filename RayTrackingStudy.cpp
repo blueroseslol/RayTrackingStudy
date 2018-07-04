@@ -103,11 +103,24 @@ vec3 color(const ray& r,hitable *world,int depth) {
 		ray scattered;
 		//材质的衰减数值
 		vec3 attenuation;
-		vec3 emitted = rec.mat_ptr->emitted(rec.u, rec.v, rec.p);
+		vec3 emitted = rec.mat_ptr->emitted(r,rec,rec.u, rec.v, rec.p);
 		double pdf;
 		vec3 albedo;
 		//进行50次采样，直到能量衰减到0或是光线射到背景中
 		if (depth < 50 && rec.mat_ptr->scatter(r, rec, albedo, scattered,pdf)) {
+			vec3 on_light = vec3(213 + uni_dist(reng)*(343 - 213), 554, 227 + uni_dist(reng)*(332 - 227));
+			vec3 to_light = on_light - rec.p;
+			double distance_squared = to_light.squared_length();
+			to_light.make_unit_vector();
+			if (dot(to_light, rec.normal) < 0)
+				return emitted;
+			double light_area = (343 - 213)*(332 - 227);
+			double light_cosine = fabs(to_light.y());
+			if (light_cosine < 0.000001)
+				return emitted;
+			pdf = distance_squared / (light_cosine*light_area);
+			scattered = ray(rec.p,to_light,r.time());
+			
 			return emitted + albedo*rec.mat_ptr->scattering_pdf(r, rec, scattered)*color(scattered, world, depth + 1)/pdf;
 		}
 		else{
