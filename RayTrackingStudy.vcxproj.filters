@@ -120,6 +120,18 @@
     <ClInclude Include="constant_medium.h">
       <Filter>头文件\shape</Filter>
     </ClInclude>
+    <ClInclude Include="pdf.h">
+      <Filter>头文件\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="cosine_pdf.h">
+      <Filter>头文件\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="hitable_pdf.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="mixture_pdf.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

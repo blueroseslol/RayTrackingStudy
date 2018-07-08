@@ -41,6 +41,24 @@ public:
 		box = aabb(vec3(x0, k - 0.0001, z0), vec3(x1, k + 0.0001, z1));
 		return true;
 	}
+
+	virtual double pdf_value(const vec3& o, const vec3& v) const {
+		hit_record rec;
+		if (this->hit(ray(o, v), 0.001, FLT_MAX, rec)) {
+			double area = (x1 - x0)*(z1 - z0);
+			double distance_squared = rec.t*rec.t*v.squared_length();
+			double cosine = fabs(dot(v, rec.normal) / v.length());
+			return distance_squared / (cosine*area);
+		}
+		else
+			return 0;
+	}
+
+	virtual vec3 random(const vec3& o) const {
+		vec3 random_point = vec3(x0 + uni_dist(reng)*(x1 - x0), k, z0 + uni_dist(reng)*(z1 - z0));
+		return random_point - o;
+	}
+
 	material *mp;
 	double x0, x1, z0, z1, k;
 };
