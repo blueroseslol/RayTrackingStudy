@@ -14,11 +14,13 @@ public:
 			fuzz = 1;
 	}
 	//对于光滑金属，射线并不会发生随机的散射现象，所以不使用随机向量处理
-	virtual bool scatter(const ray& r_in, const hit_record& rec, vec3& attenuation, ray& scattered) const {
+	virtual bool scatter(const ray& r_in, const hit_record& rec,scatter_record& srec) const {
 		vec3 reflected = reflect(unit_vector(r_in.direction()), rec.normal);
-		scattered = ray(rec.p, reflected+fuzz*random_in_unit_sphere());
-		attenuation = albedo;
-		return (dot(scattered.direction(), rec.normal) > 0);
+		srec.specular_ray = ray(rec.p, reflected+fuzz*random_in_unit_sphere());
+		srec.attenuation = albedo;
+		srec.is_specular = true;
+		srec.pdf_ptr = 0;
+		return true;
 	}
 	vec3 albedo;
 	double fuzz;

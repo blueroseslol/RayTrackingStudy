@@ -56,7 +56,8 @@ hitable *cornell_smoke() {
 }
 
 hitable *cornell_box() {
-	hitable **list = new hitable*[8];
+	hitable **list = new hitable*[7];
+//	hitable **list = new hitable*[8];
 	int i = 0;
 	material *red = new lambertian(new constant_texture(vec3(0.65, 0.05, 0.05)));
 	material *white = new lambertian(new constant_texture(vec3(0.73, 0.73, 0.73)));
@@ -65,14 +66,23 @@ hitable *cornell_box() {
 
 	list[i++] = new flip_normals(new yz_rect(0, 555, 0, 555, 555, green));
 	list[i++] = new yz_rect(0, 555, 0, 555, 0, red);
-	list[i++] = new xz_rect(213, 343, 227, 332, 554, light);
+	//list[i++] = new xz_rect(213, 343, 227, 332, 554, light);
 	list[i++] = new flip_normals(new xz_rect(0, 555, 0, 555, 555, white));
 	list[i++] = new xz_rect(0, 555, 0, 555, 0, white);
 	list[i++] = new flip_normals(new xy_rect(0, 555, 0, 555, 555, white));
 	list[i++] = new translate(new rotate_y(new box(vec3(0, 0, 0), vec3(165, 165, 165), white),-18),vec3(130,0,65));
-	list[i++] = new translate(new rotate_y(new box(vec3(0, 0, 0), vec3(165, 330, 165), white),15),vec3(265,0,295));
+	material *aluminum = new metal(vec3(0.8, 0.85, 0.88), 0.0);
+	list[i++] = new translate(new rotate_y(new box(vec3(0, 0, 0), vec3(165, 330, 165), aluminum),15),vec3(265,0,295));
 	return new hitable_list(list, i);
 }
+hitable *cornell_box_light_shape() {
+	hitable **list = new hitable*[1];
+	int i = 0;
+	material *light = new diffuse_light(new constant_texture(vec3(15, 15, 15)));
+	list[i++] = new xz_rect(213, 343, 227, 332, 554, light);
+	return new hitable_list(list, i);
+}
+
 
 hitable *simple_light() {
 	hitable **list = new hitable *[4];
@@ -100,51 +110,42 @@ hitable *two_perlin_spheres() {
 	return new hitable_list(list, 2);
 }
 
-vec3 color(const ray& r,hitable *world,int depth) {
+vec3 color(const ray& r,hitable *world,hitable *light_shape,int depth) {
 	hit_record rec;
 	if (world->hit(r, 0.001, DBL_MAX, rec)) {
-		//散射出的光线
-		ray scattered;
-		//材质的衰减数值
-		vec3 attenuation;
-		vec3 emitted = rec.mat_ptr->emitted(r,rec,rec.u, rec.v, rec.p);
-		double pdf;
-		vec3 albedo;
-		//进行50次采样，直到能量衰减到0或是光线射到背景中
-		if (depth < 50 && rec.mat_ptr->scatter(r, rec, albedo, scattered,pdf)) {
-			////on_light为在灯光上的点
-			//vec3 on_light = vec3(213 + uni_dist(reng)*(343 - 213), 554, 227 + uni_dist(reng)*(332 - 227));
-			////光线碰撞点到on_light的距离
-			//vec3 to_light = on_light - rec.p;
-			//double distance_squared = to_light.squared_length();
-			//to_light.make_unit_vector();
-			////如果采样面没有面向灯光就返回vec3(0,0,0),如果是发光体，就直接发光了
-			//if (dot(to_light, rec.normal) < 0)
-			//	return emitted;
-			//double light_area = (343 - 213)*(332 - 227);
-			////这里是因为是与Y轴垂直的平面才能这么求的
-			//double light_cosine = fabs(to_light.y());
-			////dot灯光的法线
-			////double light_cosine = fabs(dot(to_light,vec3(0,-1,0)));
-			//if (light_cosine < 0.000001)
-			//	return emitted;
-			////A为灯光的的面积
-			////如果我们在面光源上均匀采样，则pdf 为1/A
-			////立体角：dw = dA cos(alpha) / (distance(p,q)^2)
-			////因为立体角dw与dA是相同的
-			////可得：p(direction)*cos(alpha)*dA / (distance(p,q)^2 ) = p_q(q)*dA = dA / A
-			////pdf=distance(p,q)^2 / ( cos(alpha) *A )
-			//pdf = distance_squared / (light_cosine*light_area);
-			//scattered = ray(rec.p,to_light,r.time());
+		////散射出的光线
+		//ray scattered;
+		////材质的衰减数值
+		//vec3 attenuation;
+		//vec3 emitted = rec.mat_ptr->emitted(r,rec,rec.u, rec.v, rec.p);
+		//double pdf;
+		//vec3 albedo;
+		////进行50次采样，直到能量衰减到0或是光线射到背景中
+		//if (depth < 50 && rec.mat_ptr->scatter(r, rec, albedo, scattered,pdf)) {
+		//	hitable *light_shape = new xz_rect(213, 343, 227, 332, 554, 0);
+		//	hitable_pdf p0(light_shape, rec.p);
+		//	cosine_pdf p1(rec.normal);
+		//	mixture_pdf p(&p0, &p1);
+		//	
+		//	scattered = ray(rec.p,p.generate(),r.time());
+		//	pdf = p.value(scattered.direction());
+		//	return emitted + albedo*rec.mat_ptr->scattering_pdf(r, rec, scattered)*color(scattered, world, depth + 1)/pdf;
+		scatter_record srec;
+		vec3 emitted= rec.mat_ptr->emitted(r, rec, rec.u, rec.v, rec.p);
+		if (depth < 50 && rec.mat_ptr->scatter(r,rec,srec)) {
 
-			hitable *light_shape = new xz_rect(213, 343, 227, 332, 554, 0);
-			hitable_pdf p0(light_shape, rec.p);
-			cosine_pdf p1(rec.normal);
-			mixture_pdf p(&p0, &p1);
-			
-			scattered = ray(rec.p,p.generate(),r.time());
-			pdf = p.value(scattered.direction());
-			return emitted + albedo*rec.mat_ptr->scattering_pdf(r, rec, scattered)*color(scattered, world, depth + 1)/pdf;
+			if (srec.is_specular) {
+				return srec.attenuation*color(srec.specular_ray, world, light_shape, depth + 1);
+			}
+			else {
+				hitable_pdf plight(light_shape, rec.p);
+				mixture_pdf p(&plight, srec.pdf_ptr);
+				ray scattered = ray(rec.p, p.generate(), r.time());
+				double pdf_val = p.value(scattered.direction());
+
+				return emitted + srec.attenuation*rec.mat_ptr->scattering_pdf(r, rec, scattered)*color(scattered, world, light_shape, depth + 1) / pdf_val;
+			}
+	
 		}
 		else{
 			return emitted;
@@ -195,6 +196,7 @@ int main()
 		out << "P3\n" << nx << " " << ny << "\n255\n";
 		double R = cos(M_PI / 4);
 		hitable *world = cornell_box();
+		hitable *light = cornell_box_light_shape();
 		vec3 lookfrom(278, 278, -800);
 		vec3 lookat(278, 278, 0);
 		double dist_to_focus = 10;
@@ -211,7 +213,7 @@ int main()
 					double u = double(i + uni_dist(reng)) / double(nx);
 					double v = double(j + uni_dist(reng)) / double(ny);
 					ray r = cam.get_ray(u, v);
-					col += color(r, world, 0);
+					col += color(r, world, light,0);
 				}
 				col /= double(ns);
 				//if (col[0]>1 && col[1]>1 && col[2]>1)

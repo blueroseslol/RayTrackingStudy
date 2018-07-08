@@ -1,5 +1,6 @@
 #pragma once
 #include "hitable.h"
+#include "pdf.h"
 //#include <ctime>
 //#include <random>
 
@@ -30,10 +31,18 @@ inline vec3 random_cosine_direction() {
 	return vec3(x, y, z);
 }
 
+struct scatter_record
+{
+	ray specular_ray;
+	bool is_specular;
+	vec3 attenuation;
+	pdf *pdf_ptr;
+};
+
 class material
 {
 public:
-	virtual bool scatter(const ray& r_in, const hit_record& rec, vec3& albedo, ray& scattered,double & pdf) const { return false; }
+	virtual bool scatter(const ray& r_in, const hit_record& rec,scatter_record& srec) const { return false; }
 
 	virtual double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const {return false;}
 
