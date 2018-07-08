@@ -31,6 +31,7 @@
 
 #include "cosine_pdf.h"
 #include "hitable_pdf.h"
+#include "mixture_pdf.h"
 hitable *cornell_smoke() {
 	hitable **list = new hitable*[8];
 	int i = 0;
@@ -137,7 +138,10 @@ vec3 color(const ray& r,hitable *world,int depth) {
 			//scattered = ray(rec.p,to_light,r.time());
 
 			hitable *light_shape = new xz_rect(213, 343, 227, 332, 554, 0);
-			hitable_pdf p(light_shape, rec.p);
+			hitable_pdf p0(light_shape, rec.p);
+			cosine_pdf p1(rec.normal);
+			mixture_pdf p(&p0, &p1);
+			
 			scattered = ray(rec.p,p.generate(),r.time());
 			pdf = p.value(scattered.direction());
 			return emitted + albedo*rec.mat_ptr->scattering_pdf(r, rec, scattered)*color(scattered, world, depth + 1)/pdf;
