@@ -56,8 +56,8 @@ hitable *cornell_smoke() {
 }
 
 hitable *cornell_box() {
-	hitable **list = new hitable*[7];
-//	hitable **list = new hitable*[8];
+	//hitable **list = new hitable*[7];
+	hitable **list = new hitable*[8];
 	int i = 0;
 	material *red = new lambertian(new constant_texture(vec3(0.65, 0.05, 0.05)));
 	material *white = new lambertian(new constant_texture(vec3(0.73, 0.73, 0.73)));
@@ -66,7 +66,7 @@ hitable *cornell_box() {
 
 	list[i++] = new flip_normals(new yz_rect(0, 555, 0, 555, 555, green));
 	list[i++] = new yz_rect(0, 555, 0, 555, 0, red);
-	//list[i++] = new xz_rect(213, 343, 227, 332, 554, light);
+	list[i++] = new xz_rect(213, 343, 227, 332, 554, light);
 	list[i++] = new flip_normals(new xz_rect(0, 555, 0, 555, 555, white));
 	list[i++] = new xz_rect(0, 555, 0, 555, 0, white);
 	list[i++] = new flip_normals(new xy_rect(0, 555, 0, 555, 555, white));
@@ -111,39 +111,21 @@ hitable *two_perlin_spheres() {
 }
 
 vec3 color(const ray& r,hitable *world,hitable *light_shape,int depth) {
-	hit_record rec;
-	if (world->hit(r, 0.001, DBL_MAX, rec)) {
-		////散射出的光线
-		//ray scattered;
-		////材质的衰减数值
-		//vec3 attenuation;
-		//vec3 emitted = rec.mat_ptr->emitted(r,rec,rec.u, rec.v, rec.p);
-		//double pdf;
-		//vec3 albedo;
-		////进行50次采样，直到能量衰减到0或是光线射到背景中
-		//if (depth < 50 && rec.mat_ptr->scatter(r, rec, albedo, scattered,pdf)) {
-		//	hitable *light_shape = new xz_rect(213, 343, 227, 332, 554, 0);
-		//	hitable_pdf p0(light_shape, rec.p);
-		//	cosine_pdf p1(rec.normal);
-		//	mixture_pdf p(&p0, &p1);
-		//	
-		//	scattered = ray(rec.p,p.generate(),r.time());
-		//	pdf = p.value(scattered.direction());
-		//	return emitted + albedo*rec.mat_ptr->scattering_pdf(r, rec, scattered)*color(scattered, world, depth + 1)/pdf;
+	hit_record hrec;
+	if (world->hit(r, 0.001, DBL_MAX, hrec)) {
 		scatter_record srec;
-		vec3 emitted= rec.mat_ptr->emitted(r, rec, rec.u, rec.v, rec.p);
-		if (depth < 50 && rec.mat_ptr->scatter(r,rec,srec)) {
-
+		vec3 emitted= hrec.mat_ptr->emitted(r, hrec, hrec.u, hrec.v, hrec.p);
+		if (depth < 50 && hrec.mat_ptr->scatter(r,hrec,srec)) {
 			if (srec.is_specular) {
 				return srec.attenuation*color(srec.specular_ray, world, light_shape, depth + 1);
 			}
 			else {
-				hitable_pdf plight(light_shape, rec.p);
+				hitable_pdf plight(light_shape, hrec.p);
 				mixture_pdf p(&plight, srec.pdf_ptr);
-				ray scattered = ray(rec.p, p.generate(), r.time());
+				ray scattered = ray(hrec.p, p.generate(), r.time());
 				double pdf_val = p.value(scattered.direction());
 
-				return emitted + srec.attenuation*rec.mat_ptr->scattering_pdf(r, rec, scattered)*color(scattered, world, light_shape, depth + 1) / pdf_val;
+				return emitted + srec.attenuation*hrec.mat_ptr->scattering_pdf(r, hrec, scattered)*color(scattered, world, light_shape, depth + 1) / pdf_val;
 			}
 	
 		}

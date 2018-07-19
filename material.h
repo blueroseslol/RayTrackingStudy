@@ -42,7 +42,7 @@ struct scatter_record
 class material
 {
 public:
-	virtual bool scatter(const ray& r_in, const hit_record& rec,scatter_record& srec) const { return false; }
+	virtual bool scatter(const ray& r_in, const hit_record& hrec,scatter_record& srec) const { return false; }
 
 	virtual double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const {return false;}
 
